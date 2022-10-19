@@ -40,7 +40,13 @@ exports.signup = async (req, res) => {
 // Update user by id
 exports.updateUser = async (req, res) => {
     try {
-        const response = await users.findOneAndUpdate({id: req.body.id}, {...req.body});
+
+        // Hashing password
+        const salt = await bcrypt.genSalt(7);
+        req.body.password = await bcrypt.hash(req.body.password, salt);
+
+        // Updating password
+        const response = await users.findOneAndUpdate({_id: req.params.id}, {...req.body}, {new: true});
         res.send(response);
     } catch (err) {
         console.error(err);
@@ -65,6 +71,19 @@ exports.login = async (req, res) => {
         const token = jwt.sign({ ...existUser}, process.env.JWT_SECRET, {expiresIn: '1hr'});
         res.send(token);
 
+    } catch (err) {
+        console.log(err);
+        res.status(403).send(err);
+    }
+}
+
+
+// get all users list
+exports.getAllUsers = async(req, res) => {
+    try {
+        const response = await users.find({role: {$ne: 'admin'}});
+        const data = response.map(s => s.name);
+        res.send(data);
     } catch (err) {
         console.log(err);
         res.status(403).send(err);
