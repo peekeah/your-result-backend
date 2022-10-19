@@ -4,7 +4,8 @@ const router = express.Router();
 
 // Routes
 router.get('/', userModule.getUsers );
-router.post('/create', userModule.createUser);
+router.post('/signup', userModule.signup);
+router.post('/login', userModule.login);
 router.patch('/update/:id', userModule.updateUser);
 
 

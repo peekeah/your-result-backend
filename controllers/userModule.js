@@ -1,5 +1,6 @@
 const users = require("../schemas/userSchema");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // Get all users
 exports.getUsers = async (req, res) => {
@@ -13,14 +14,23 @@ exports.getUsers = async (req, res) => {
 };
 
 // Create user
-exports.createUser = async (req, res) => {
+exports.signup = async (req, res) => {
     try {
+        // checking for existing user
+        const existUser = await users.findOne({email: req.body.email});
+        if(existUser) return res.status(401).send({msg: 'User already exists'});
+
         // Hashing password
         const salt = await bcrypt.genSalt(7);
         req.body.password = await bcrypt.hash(req.body.password, salt);
 
+        // Storing data in Database
         const response = await new users(req.body).save();
-        res.send(response);
+
+        //Generating Token
+        const token = jwt.sign({ ...response}, process.env.JWT_SECRET, {expiresIn: '1hr'});
+        res.send(token);
+
     } catch (err) {
         console.log(err);
         res.status(403).send(err);
@@ -37,3 +47,26 @@ exports.updateUser = async (req, res) => {
         res.status(403).send(err);
     }
 };
+
+
+// User login
+exports.login = async (req, res) => {
+    try {
+        // Checking if user is present
+        const existUser = await users.findOne({email: req.body.email});
+        if(!existUser) return res.status(401).send({msg: 'User does not exist'});
+        
+        // validating password
+        const isValid = await bcrypt.compare(req.body.password, existUser.password);
+        if(!isValid) return res.status(403).send({msg: 'Wrong password'});
+
+
+        //Generating Token
+        const token = jwt.sign({ ...existUser}, process.env.JWT_SECRET, {expiresIn: '1hr'});
+        res.send(token);
+
+    } catch (err) {
+        console.log(err);
+        res.status(403).send(err);
+    }
+}
