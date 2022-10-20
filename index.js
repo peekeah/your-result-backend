@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const userRouter = require('./routes/userRouter');
 const resultRouter = require('./routes/resultRouter');
+const auth = require('./middlewares/auth');
 
 dotenv.config();
 
@@ -18,8 +19,7 @@ app.get('/', async (req, res) => {
 
 // Routes
 app.use('/users', userRouter);
-app.use('/result', resultRouter);
-
+app.use('/result', auth.authenticateToken, auth.authorizeUser, resultRouter);
 
 
 // MongoDB connection

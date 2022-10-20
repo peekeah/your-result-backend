@@ -89,3 +89,17 @@ exports.getAllUsers = async(req, res) => {
         res.status(403).send(err);
     }
 }
+
+// is user admin
+exports.isAdmin = async(req, res) => {
+    try {
+        if (req.body.tokenData._doc.role === "admin") {
+            res.send(true);
+        } else {
+            res.send(false);
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(403).send(err);
+    }
+}

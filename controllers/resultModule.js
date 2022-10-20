@@ -10,6 +10,16 @@ exports.displayEntries = async(req, res) => {
     }
 }
 
+exports.displayEntry = async(req, res) => {
+    try {
+        const response = await result.findById(req.params.id);
+        res.send(response);
+    } catch (err) {
+        console.log(err)
+        res.status(401).send(err);
+    }
+}
+
 exports.createEntry = async (req, res) => {
     try {
         const existEntry = await result.findOne({ name: req.body.name });

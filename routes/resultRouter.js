@@ -9,5 +9,6 @@ router.get('/display-entries', resultModule.displayEntries);
 router.post('/create', resultModule.createEntry);
 router.patch('/update/:id', resultModule.updateEntry);
 router.delete('/delete/:id', resultModule.deleteEntry);
+router.get('/:id', resultModule.displayEntry);
 
 module.exports = router;
