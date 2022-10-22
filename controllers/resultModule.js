@@ -57,3 +57,22 @@ exports.deleteEntry = async (req, res) => {
     }
 };
 
+exports.filterResultByStudent = async (req, res) => {
+    try {
+        const response = await result.find({name: req.body.name});
+        res.send(response);
+    } catch (error) {
+        console.log(error);
+        res.status(403).send(error);
+    }
+}
+
+exports.filterResultBySubject = async (req, res) => {
+    try {
+        const response = await result.find({subject: req.body.subject});
+        res.send(response);
+    } catch (error) {
+        console.log(error);
+        res.status(403).send(error);
+    }
+}
