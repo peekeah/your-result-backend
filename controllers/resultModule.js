@@ -22,7 +22,7 @@ exports.displayEntry = async(req, res) => {
 
 exports.createEntry = async (req, res) => {
     try {
-        const existEntry = await result.findOne({ name: req.body.name });
+        const existEntry = await result.findOne({ name: req.body.name, subject: req.body.subject });
         if(existEntry) {
             existEntry.marks += parseInt(req.body.marks); 
             existEntry.save();
