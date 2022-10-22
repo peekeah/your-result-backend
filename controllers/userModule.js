@@ -29,7 +29,7 @@ exports.signup = async (req, res) => {
         const response = await new users(req.body).save();
 
         //Generating Token
-        const token = jwt.sign({ ...response}, process.env.JWT_SECRET, {expiresIn: '1hr'});
+        const token = jwt.sign({ ...response}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRY || '1hr'});
         res.send(token);
 
     } catch (err) {
@@ -69,7 +69,7 @@ exports.login = async (req, res) => {
 
 
         //Generating Token
-        const token = jwt.sign({ ...existUser}, process.env.JWT_SECRET, {expiresIn: '1hr'});
+        const token = jwt.sign({ ...existUser}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRY || '1hr'});
         res.send(token);
 
     } catch (err) {
