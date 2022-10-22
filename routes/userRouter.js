@@ -12,6 +12,6 @@ router.post('/is-admin', auth.authenticateToken, userModule.isAdmin);
 router.get('/', auth.authenticateToken, auth.authorizeUser, userModule.getAllUsers, userModule.getUsers );
 router.get('/users-list', auth.authenticateToken, auth.authorizeUser, userModule.getAllUsers);
 
-
+router.post('/get-data', auth.authenticateToken, userModule.getData )
 
 module.exports = router;

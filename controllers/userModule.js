@@ -1,4 +1,5 @@
 const users = require("../schemas/userSchema");
+const result = require("../schemas/resultSchema");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -98,6 +99,17 @@ exports.isAdmin = async(req, res) => {
         } else {
             res.send(false);
         }
+    } catch (err) {
+        console.log(err);
+        res.status(403).send(err);
+    }
+}
+
+// Getting result of user by token
+exports.getData = async(req, res) => {
+    try {
+        const response = await result.find({name: req.body.tokenData._doc.name});
+        res.send(response)
     } catch (err) {
         console.log(err);
         res.status(403).send(err);
